@@ -8,14 +8,32 @@ import (
 )
 
 type Weather struct {
-	Daily struct {
-		Time []string `json:"time"`
-		WeatherCode []int `json:"weather_code"`
-	} `json:"daily"`
+	Location struct {
+		Name string `json:"name"`
+		Country string `json:"country"`
+	} `json:"location"`
+	Current struct {
+		TempC float64 `json:"temp_c"`
+		Condition struct {
+			Text string `json:"text"`
+		} `json:"condition"`
+	} `json:"current"`
+	Forecast struct {
+		Forecastday []struct {
+			Hour []struct {
+				TimeEpoch int64 `json:"time_epoch"`
+				TempC float64 `json:"temp_c"`
+				Condition struct {
+					Text string `json:"text"`
+				} `json:"condition"`
+				ChanceOfRain float64 `json:"chance_of_rain"`
+			} `json:"hour"`
+		} `json:"forecastday"`
+	} `json:"forecast"`
 }
 
 func main() {
-	url := "https://api.open-meteo.com/v1/forecast?latitude=35.6895&longitude=139.6917&daily=weather_code&timezone=Asia%2FTokyo"
+	url := "http://api.weatherapi.com/v1/forecast.json?key=b0f37555a7a94846bc355100240501&q=Iasi&days=1&api=no&alerts=no"
 	res, err := http.Get(url)
 	if err != nil {
 		panic(err)
@@ -37,4 +55,5 @@ func main() {
 		panic(err)
 	}
 	fmt.Println(weather)
+
 }
